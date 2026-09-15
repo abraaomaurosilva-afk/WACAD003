@@ -4,9 +4,6 @@ const thumbBar = document.querySelector('.thumb-bar');
 const btn = document.querySelector('button');
 const overlay = document.querySelector('.overlay');
 
-// 1. Array com os nomes dos arquivos das 5 imagens de Stranger Things
-const images = ['pic1.jpg', 'pic2.jpg', 'pic3.jpg', 'pic4.jpg', 'pic5.jpg'];
-const altTexts = {
   'pic1.jpg': 'Eleven em Hawkins',
   'pic2.jpg': 'Dustin no laboratório',
   'pic3.jpg': 'Steve Harrington',
@@ -14,7 +11,10 @@ const altTexts = {
   'pic5.jpg': 'Portal de Hawkins'
 };
 
-/* Looping através das imagens */
+/* Looping através das
+// 1. Array com os nomes dos arquivos das 5 imagens de Stranger Things
+const images = ['pic1.jpg', 'pic2.jpg', 'pic3.jpg', 'pic4.jpg', 'pic5.jpg'];
+const altTexts = { imagens */
 for (let i = 0; i < images.length; i++) {
   const newImage = document.createElement('img');
   newImage.setAttribute('src', 'images/' + images[i]);
