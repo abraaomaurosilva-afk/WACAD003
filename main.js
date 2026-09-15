@@ -1,119 +1,47 @@
-```javascript
-// Pegando os elementos HTML
-
-const customName = document.getElementById("customName");
-const randomize = document.getElementById("randomize");
-const story = document.getElementById("story");
-
-
-// Função para escolher um elemento aleatório de um array
+const customName = document.getElementById('customname');
+const randomize = document.querySelector('.randomize');
+const story = document.querySelector('.story');
 
 function randomValueFromArray(array) {
-
-    const random =
-        Math.floor(Math.random() * array.length);
-
-    return array[random];
+  const random = Math.floor(Math.random() * array.length);
+  return array[random];
 }
 
+// Texto bruto com placeholders e arrays adaptados para o tema de Stranger Things
+let storyText = 'Faziam 90 graus fahrenheit lá fora no laboratório de Hawkins, então :insertx: resolveu dar uma volta de bicicleta até :inserty:. De repente, a luz começou a piscar freneticamente, e então :insertz:. O xerife Hopper viu tudo, mas não se assustou — :insertx: pesa 180 libras e estava com muita fome de waffles.';
 
-// Texto principal da história
+let insertX = ['a Eleven', 'o Dustin', 'o Steve Harrington'];
+let insertY = ['do Mundo Invertido', 'do Shopping Starcourt', 'da Caverna do Vecna'];
+let insertZ = ['abriu um portal imenso com o poder da mente', 'lançou um urro que mandou o Demogorgon pelos ares', 'invocou um bando de morcegos do mal e saiu correndo'];
 
-const storyText =
-    ":name: estava assistindo a uma série quando recebeu " +
-    ":insertx:. " +
-    "De repente, :inserty: apareceu na tela e " +
-    ":name: decidiu continuar assistindo. " +
-    "No final do episódio, :insertz: aconteceu " +
-    "e deixou todos os espectadores surpresos!";
-
-
-// Primeiras opções
-
-const insertX = [
-    "uma mensagem misteriosa",
-    "um convite para participar de uma aventura",
-    "uma ligação inesperada",
-    "uma notícia sobre seu personagem favorito"
-];
-
-
-// Segundas opções
-
-const insertY = [
-    "um personagem desconhecido",
-    "o protagonista da série",
-    "um detetive misterioso",
-    "um grupo de amigos"
-];
-
-
-// Terceiras opções
-
-const insertZ = [
-    "o personagem desapareceu misteriosamente",
-    "uma grande revelação mudou toda a história",
-    "um novo vilão apareceu",
-    "todos descobriram um segredo inesperado"
-];
-
-
-// Quando o botão for clicado,
-// a função result() será executada
-
-randomize.addEventListener("click", result);
-
-
-// Função responsável por gerar a história
+randomize.addEventListener('click', result);
 
 function result() {
+  let newStory = storyText;
 
-    // Cria uma cópia do texto original
+  let xItem = randomValueFromArray(insertX);
+  let yItem = randomValueFromArray(insertY);
+  let zItem = randomValueFromArray(insertZ);
 
-    let newStory = storyText;
+  newStory = newStory.replaceAll(':insertx:', xItem);
+  newStory = newStory.replace(':inserty:', yItem);
+  newStory = newStory.replace(':insertz:', zItem);
 
+  if (customName.value !== '') {
+    let name = customName.value;
+    newStory = newStory.replace('xerife Hopper', name);
+  }
 
-    // Escolhe frases aleatórias
+  if (document.getElementById('uk').checked) {
+    // Conversão de 180 libras para stones (aprox 12.8)
+    let weight = Math.round(180 * 0.0714285714) + ' stone';
+    // Conversão de 90 Fahrenheit para Celsius (aprox 32.2)
+    let temperature = Math.round((90 - 32) * 5 / 9) + ' centígrados';
+    
+    newStory = newStory.replace('180 libras', weight);
+    newStory = newStory.replace('90 graus fahrenheit', temperature);
+  }
 
-    const xItem = randomValueFromArray(insertX);
-
-    const yItem = randomValueFromArray(insertY);
-
-    const zItem = randomValueFromArray(insertZ);
-
-
-    // Substitui os marcadores
-
-    newStory = newStory.replace(":insertx:", xItem);
-
-    newStory = newStory.replace(":inserty:", yItem);
-
-    newStory = newStory.replace(":insertz:", zItem);
-
-
-    // Define o nome padrão
-
-    let name = "Alex";
-
-
-    // Verifica se o usuário digitou um nome
-
-    if (customName.value !== "") {
-
-        name = customName.value;
-
-    }
-
-
-    // Substitui o nome na história
-
-    newStory = newStory.replace(":name:", name);
-
-    newStory = newStory.replace(":name:", name);
-
-
-    // Exibe a história na tela
-
-    story.textContent = newStory;
+  story.textContent = newStory;
+  story.style.visibility = 'visible';
 }
-```
