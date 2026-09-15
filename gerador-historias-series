@@ -1,1 +1,5 @@
-
+gerador-historias-series/
+│
+├── index.html
+├── main.js
+└── README.md
