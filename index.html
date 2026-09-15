@@ -1,213 +1,70 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Gerador de Histórias de Séries</title>
-
+  <head>
+    <meta charset="utf-8">
+    <title>Gerador de Histórias Aleatórias - Stranger Things</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #141414;
-            color: white;
-            text-align: center;
-            padding: 40px;
-        }
-
-        h1 {
-            color: #e50914;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: auto;
-            background-color: #222;
-            padding: 30px;
-            border-radius: 15px;
-        }
-
-        input {
-            padding: 10px;
-            width: 60%;
-            border-radius: 5px;
-            border: none;
-            margin: 10px;
-        }
-
-        label {
-            display: block;
-            margin: 15px;
-        }
-
-        button {
-            background-color: #e50914;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #b20710;
-        }
-
-        #story {
-            margin-top: 30px;
-            font-size: 20px;
-            line-height: 1.6;
-        }
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        width: 350px;
+        margin: 0 auto;
+        background-color: #111;
+        color: #eee;
+        padding: 20px;
+      }
+      label {
+        font-weight: bold;
+      }
+      div {
+        padding-bottom: 20px;
+      }
+      input[type="text"] {
+        padding: 5px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 10px;
+        background-color: #b91c1c;
+        color: white;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+      }
+      button:hover {
+        background-color: #991b1b;
+      }
+      .story {
+        background: #222;
+        color: #ff4d4d;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 1.1em;
+        line-height: 1.4;
+        visibility: hidden;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
-    <div class="container">
-
-        <h1>🎬 Gerador de Histórias de Séries</h1>
-
-        <p>
-            Digite o nome de um personagem e descubra uma história
-            aleatória no universo das séries!
-        </p>
-
-        <label for="customname">
-            Nome do personagem:
-        </label>
-
-        <input
-            id="customname"
-            type="text"
-            placeholder="Digite um nome"
-        >
-
-        <label>
-            <input id="us" type="radio" name="units" value="us" checked>
-            Sistema Americano
-        </label>
-
-        <label>
-            <input id="metric" type="radio" name="units" value="metric">
-            Sistema Métrico
-        </label>
-
-        <br>
-
-        <button id="randomize">
-            Gerar História
-        </button>
-
-        <p id="story"></p>
-
+  <body>
+    <div>
+      <label for="customname">Insira um novo nome para o xerife:</label><br>
+      <input id="customname" type="text" placeholder="Ex: Xerife Hopper">
     </div>
 
-    <script>
+    <div>
+      <label>EUA <input id="us" type="radio" name="ukus" value="us" checked></label>
+      <label>UK <input id="uk" type="radio" name="ukus" value="uk"></label>
+    </div>
 
-        const customName = document.getElementById("customname");
-        const randomize = document.getElementById("randomize");
-        const story = document.getElementById("story");
-        const metric = document.getElementById("metric");
+    <div>
+      <button class="randomize">Gerar história aleatória</button>
+    </div>
 
-        const personagens = [
-            "o detetive misterioso",
-            "a protagonista da série",
-            "o cientista maluco",
-            "o policial da cidade",
-            "a hacker brilhante",
-            "o viajante do tempo",
-            "a médica determinada"
-        ];
+    <!-- O bloco abaixo recebe a história gerada pelo script -->
+    <div class="story"></div>
 
-        const acontecimentos = [
-            "encontrou um portal secreto dentro de uma estação de metrô",
-            "descobriu que seu melhor amigo escondia um grande segredo",
-            "recebeu uma mensagem misteriosa durante a madrugada",
-            "precisou fugir de uma organização secreta",
-            "encontrou uma pista que poderia mudar toda a história",
-            "acidentalmente viajou para outra época",
-            "descobriu que estava sendo observado há vários dias"
-        ];
-
-        const locais = [
-            "em uma cidade completamente desconhecida",
-            "dentro de um laboratório abandonado",
-            "em uma pequena cidade cercada por mistérios",
-            "em uma mansão cheia de passagens secretas",
-            "em uma estação de trem durante a madrugada",
-            "em um prédio aparentemente abandonado",
-            "em uma floresta onde ninguém costumava entrar"
-        ];
-
-        const finais = [
-            "No final, tudo parecia fazer parte de um plano muito maior.",
-            "A descoberta mudou completamente o rumo da série.",
-            "Depois daquele dia, nada voltou a ser como antes.",
-            "O mistério ainda não havia terminado.",
-            "A última pista revelou que alguém estava manipulando todos os acontecimentos.",
-            "O episódio terminou com uma grande surpresa."
-        ];
-
-        function randomValueFromArray(array) {
-            const random =
-                Math.floor(Math.random() * array.length);
-
-            return array[random];
-        }
-
-        function generateStory() {
-
-            let name = customName.value;
-
-            if (name === "") {
-                name = "Alex";
-            }
-
-            const personagem =
-                randomValueFromArray(personagens);
-
-            const acontecimento =
-                randomValueFromArray(acontecimentos);
-
-            const local =
-                randomValueFromArray(locais);
-
-            const final =
-                randomValueFromArray(finais);
-
-            let storyText =
-                `${name} era ${personagem} e estava investigando ` +
-                `${acontecimento} ${local}. ` +
-                `Depois de algumas horas, percebeu que ` +
-                `a situação era muito mais perigosa do que imaginava. ` +
-                `${final}`;
-
-            if (metric.checked) {
-                storyText +=
-                    " A equipe percorreu aproximadamente 12 quilômetros durante a investigação.";
-            } else {
-                storyText +=
-                    " A equipe percorreu aproximadamente 7 milhas durante a investigação.";
-            }
-
-            story.textContent = storyText;
-        }
-
-        randomize.addEventListener(
-            "click",
-            generateStory
-        );
-
-    </script>
-
-</body>
-
+    <script src="main.js"></script>
+  </body>
 </html>
-```
-  
-   
-   
- 
