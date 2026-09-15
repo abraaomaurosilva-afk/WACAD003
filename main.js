@@ -1,47 +1,49 @@
-const customName = document.getElementById('customname');
-const randomize = document.querySelector('.randomize');
-const story = document.querySelector('.story');
+const displayedImg = document.querySelector('.displayed-img');
+const thumbBar = document.querySelector('.thumb-bar');
 
-function randomValueFromArray(array) {
-  const random = Math.floor(Math.random() * array.length);
-  return array[random];
+const btn = document.querySelector('button');
+const overlay = document.querySelector('.overlay');
+
+// 1. Array com os nomes dos arquivos das 5 imagens de Stranger Things
+const images = ['pic1.jpg', 'pic2.jpg', 'pic3.jpg', 'pic4.jpg', 'pic5.jpg'];
+const altTexts = {
+  'pic1.jpg': 'Eleven em Hawkins',
+  'pic2.jpg': 'Dustin no laboratório',
+  'pic3.jpg': 'Steve Harrington',
+  'pic4.jpg': 'Mundo Invertido',
+  'pic5.jpg': 'Portal de Hawkins'
+};
+
+/* Looping através das imagens */
+for (let i = 0; i < images.length; i++) {
+  const newImage = document.createElement('img');
+  newImage.setAttribute('src', 'images/' + images[i]);
+  newImage.setAttribute('alt', altTexts[images[i]]);
+  thumbBar.appendChild(newImage);
+
+  /* Adicionando um manipulador onclick a cada imagem em miniatura */
+  newImage.onclick = function(e) {
+    let imgSrc = e.target.getAttribute('src');
+    displayImage(imgSrc);
+  };
 }
 
-// Texto bruto com placeholders e arrays adaptados para o tema de Stranger Things
-let storyText = 'Faziam 90 graus fahrenheit lá fora no laboratório de Hawkins, então :insertx: resolveu dar uma volta de bicicleta até :inserty:. De repente, a luz começou a piscar freneticamente, e então :insertz:. O xerife Hopper viu tudo, mas não se assustou — :insertx: pesa 180 libras e estava com muita fome de waffles.';
-
-let insertX = ['a Eleven', 'o Dustin', 'o Steve Harrington'];
-let insertY = ['do Mundo Invertido', 'do Shopping Starcourt', 'da Caverna do Vecna'];
-let insertZ = ['abriu um portal imenso com o poder da mente', 'lançou um urro que mandou o Demogorgon pelos ares', 'invocou um bando de morcegos do mal e saiu correndo'];
-
-randomize.addEventListener('click', result);
-
-function result() {
-  let newStory = storyText;
-
-  let xItem = randomValueFromArray(insertX);
-  let yItem = randomValueFromArray(insertY);
-  let zItem = randomValueFromArray(insertZ);
-
-  newStory = newStory.replaceAll(':insertx:', xItem);
-  newStory = newStory.replace(':inserty:', yItem);
-  newStory = newStory.replace(':insertz:', zItem);
-
-  if (customName.value !== '') {
-    let name = customName.value;
-    newStory = newStory.replace('xerife Hopper', name);
-  }
-
-  if (document.getElementById('uk').checked) {
-    // Conversão de 180 libras para stones (aprox 12.8)
-    let weight = Math.round(180 * 0.0714285714) + ' stone';
-    // Conversão de 90 Fahrenheit para Celsius (aprox 32.2)
-    let temperature = Math.round((90 - 32) * 5 / 9) + ' centígrados';
-    
-    newStory = newStory.replace('180 libras', weight);
-    newStory = newStory.replace('90 graus fahrenheit', temperature);
-  }
-
-  story.textContent = newStory;
-  story.style.visibility = 'visible';
+// Função nomeada para atualizar a imagem exibida
+function displayImage(value) {
+  displayedImg.setAttribute('src', value);
 }
+
+/* Escrevendo um manipulador que executa o botão escurecer / clarear */
+btn.onclick = function() {
+  const btnClass = btn.getAttribute('class');
+
+  if (btnClass === 'dark') {
+    btn.setAttribute('class', 'light');
+    btn.textContent = 'Clarear';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+  } else {
+    btn.setAttribute('class', 'dark');
+    btn.textContent = 'Escurecer';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0)';
+  }
+};
