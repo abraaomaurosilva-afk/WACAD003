@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>Gerador de Histórias Aleatórias - Stranger Things</title>
+    <style>
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        width: 350px;
+        margin: 0 auto;
+        background-color: #111;
+        color: #eee;
+        padding: 20px;
+      }
+      label {
+        font-weight: bold;
+      }
+      div {
+        padding-bottom: 20px;
+      }
+      input[type="text"] {
+        padding: 5px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 10px;
+        background-color: #b91c1c;
+        color: white;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+      }
+      button:hover {
+        background-color: #991b1b;
+      }
+      .story {
+        background: #222;
+        color: #ff4d4d;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 1.1em;
+        line-height: 1.4;
+        visibility: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <label for="customname">Insira um novo nome para o xerife:</label><br>
+      <input id="customname" type="text" placeholder="Ex: Xerife Hopper">
+    </div>
+
+    <div>
+      <label>EUA <input id="us" type="radio" name="ukus" value="us" checked></label>
+      <label>UK <input id="uk" type="radio" name="ukus" value="uk"></label>
+    </div>
+
+    <div>
+      <button class="randomize">Gerar história aleatória</button>
+    </div>
+
+    <!-- O bloco abaixo recebe a história gerada pelo script -->
+    <div class="story"></div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
