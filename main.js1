@@ -1,1 +1,111 @@
+const displayedImage = document.querySelector(".displayed-img");
+const thumbBar = document.querySelector(".thumb-bar");
+const btn = document.querySelector(".dark");
+const overlay = document.querySelector(".overlay");
+const caption = document.querySelector(".caption");
 
+const personagens = [
+  {
+    imagem: "pic1.jpeg",
+    nome: "Eleven, personagem de Stranger Things"
+  },
+  {
+    imagem: "pic2.jpeg",
+    nome: "Mike, personagem de Stranger Things"
+  },
+  {
+    imagem: "pic3.jpeg",
+    nome: "Dustin, personagem de Stranger Things"
+  },
+  {
+    imagem: "pic4.jpeg",
+    nome: "Max, personagem de Stranger Things"
+  },
+  {
+    imagem: "pic5.jpeg",
+    nome: "Will, personagem de Stranger Things"
+  }
+];
+
+// Criar as miniaturas
+personagens.forEach((personagem) => {
+
+  const newImage = document.createElement("img");
+
+  newImage.setAttribute(
+    "src",
+    `images/${personagem.imagem}`
+  );
+
+  newImage.setAttribute(
+    "alt",
+    personagem.nome
+  );
+
+  newImage.setAttribute("tabindex", "0");
+
+  thumbBar.appendChild(newImage);
+
+  // Trocar a imagem ao clicar
+  newImage.addEventListener("click", () => {
+    selecionarImagem(newImage, personagem);
+  });
+
+  // Permitir selecionar usando Enter
+  newImage.addEventListener("keydown", (event) => {
+
+    if (event.key === "Enter") {
+      selecionarImagem(newImage, personagem);
+    }
+
+  });
+
+});
+
+function selecionarImagem(imagem, personagem) {
+
+  displayedImage.src = imagem.src;
+  displayedImage.alt = personagem.nome;
+
+  caption.textContent = personagem.nome;
+
+  const miniaturas = thumbBar.querySelectorAll("img");
+
+  miniaturas.forEach((miniatura) => {
+    miniatura.classList.remove("selected");
+  });
+
+  imagem.classList.add("selected");
+}
+
+// Selecionar a primeira imagem
+const primeiraImagem = thumbBar.querySelector("img");
+
+if (primeiraImagem) {
+  primeiraImagem.classList.add("selected");
+}
+
+// Botão Escurecer / Clarear
+btn.addEventListener("click", () => {
+
+  const btnClass = btn.getAttribute("class");
+
+  if (btnClass === "dark") {
+
+    btn.setAttribute("class", "light");
+    btn.textContent = "Clarear";
+
+    overlay.style.backgroundColor =
+      "rgba(0, 0, 0, 0.5)";
+
+  } else {
+
+    btn.setAttribute("class", "dark");
+    btn.textContent = "Escurecer";
+
+    overlay.style.backgroundColor =
+      "rgba(0, 0, 0, 0)";
+
+  }
+
+});
