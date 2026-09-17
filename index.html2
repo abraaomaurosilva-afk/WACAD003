@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Galeria de Stranger Things</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main>
+      <h1>Galeria de Stranger Things</h1>
+      <div class="full-img">
+        <img class="displayed-img" src="images/pic1.jpeg" alt="Eleven, personagem de Stranger Things">
+        <div class="overlay"></div>
+        <button class="dark" type="button">Escurecer</button>
+      </div>
+      <div class="thumb-bar" aria-label="Miniaturas da galeria"></div>
+      <p class="caption" aria-live="polite">Eleven, personagem de Stranger Things</p>
+      <p>Clique em uma miniatura ou use Tab e Enter para selecionar.</p>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
