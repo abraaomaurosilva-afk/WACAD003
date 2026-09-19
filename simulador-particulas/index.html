@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Partículas - MDN Adaptado</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #111;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            height: 100%;
+        }
+
+        h1 {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            margin: 0;
+            font-size: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            z-index: 10;
+        }
+
+        .controls {
+            position: absolute;
+            top: 45px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .controls label {
+            font-size: 0.9rem;
+        }
+
+        .controls input[type="color"] {
+            border: none;
+            width: 35px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            background: none;
+        }
+
+        canvas {
+            display: block;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Simulador de Partículas Geométricas (MDN Style)</h1>
+    <div class="controls">
+        <label for="themeColor">Cor Tema:</label>
+        <input type="color" id="themeColor" value="#3b82f6">
+        <span id="particleCount">Contagem: 0</span>
+    </div>
+
+    <canvas></canvas>
+
+    <script>
+        // Configuração inicial do Canvas
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        // Atualizar dimensões ao redimensionar a janela
+        window.onresize = function() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        };
+
+        // Função utilitária para gerar números aleatórios
+        function random(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Converter Hex para RGB para manipular intensidades/luminosidade
+        function hexToRgb(hex) {
+            let bigint = parseInt(hex.replace('#', ''), 16);
+            let r = (bigint >> 16) & 255;
+            let g = (bigint >> 8) & 255;
+            let b = bigint & 255;
+            return { r, g, b };
+        }
+
+        // Gerar uma variação (intensidade) da cor tema usando HSL ou ajuste RGB
+        function getThemeShade(baseHex) {
+            const { r, g, b } = hexToRgb(baseHex);
+            // Fator de ajuste aleatório para criar diferentes intensidades da mesma cor
+            const factor = Math.random() * 0.6 + 0.4; // entre 40% e 100% de brilho
+            const newR = Math.floor(r * factor);
+            const newG = Math.floor(g * factor);
+            const newB = Math.floor(b * factor);
+            const alpha = Math.random() * 0.5 + 0.5; // opacidade variada
+
+            return `rgba(${newR}, ${newG}, ${newB}, ${alpha})`;
+        }
+
+        // Classe Base Shape (seguindo o padrão OOP do tutorial da MDN)
+        class Shape {
+            constructor(x, y, velX, velY, size) {
+                this.x = x;
+                this.y = y;
+                this.velX = velX;
+                this.velY = velY;
+                this.size = size;
+                this.exists = true;
+            }
+
+            update() {
+                // Colisão com as bordas da tela
+                if ((this.x + this.size) >= width || (this.x - this.size) <= 0) {
+                    this.velX = -(this.velX);
+                }
+
+                if ((this.y + this.size) >= height || (this.y - this.size) <= 0) {
+                    this.velY = -(this.velY);
+                }
+
+                this.x += this.velX;
+                this.y += this.velY;
+            }
+        }
+
+        // Subclasse para Triângulos
+        class Triangle extends Shape {
+            constructor(x, y, velX, velY, size, color) {
+                super(x, y, velX, velY, size);
+                this.color = color;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                // Desenhar triângulo equilátero centrado em (x, y)
+                ctx.moveTo(this.x, this.y - this.size);
+                ctx.lineTo(this.x - this.size, this.y + this.size);
+                ctx.lineTo(this.x + this.size, this.y + this.size);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        // Subclasse para Losangos (Diamond)
+        class Diamond extends Shape {
+            constructor(x, y, velX, velY, size, color) {
+                super(x, y, velX, velY, size);
+                this.color = color;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                // Desenhar losango centrado em (x, y)
+                ctx.moveTo(this.x, this.y - this.size); // Topo
+                ctx.lineTo(this.x + this.size, this.y); // Direita
+                ctx.lineTo(this.x, this.y + this.size); // Baixo
+                ctx.lineTo(this.x - this.size, this.y); // Esquerda
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        // Array para armazenar as partículas
+        let shapes = [];
+        const colorPicker = document.getElementById('themeColor');
+        const countDisplay = document.getElementById('particleCount');
+
+        function initParticles() {
+            shapes = [];
+            const currentTheme = colorPicker.value;
+            
+            while (shapes.length < 35) {
+                const size = random(10, 25);
+                const x = random(size, width - size);
+                const y = random(size, height - size);
+                const velX = random(-4, 4);
+                const velY = random(-4, 4);
+                const color = getThemeShade(currentTheme);
+
+                // Alterna entre Triângulo e Losango aleatoriamente
+                const shape = Math.random() > 0.5 
+                    ? new Triangle(x, y, velX, velY, size, color)
+                    : new Diamond(x, y, velX, velY, size, color);
+
+                shapes.push(shape);
+            }
+            countDisplay.textContent = `Contagem: ${shapes.length}`;
+        }
+
+        // Atualizar cores das partículas se o usuário trocar a cor tema
+        colorPicker.addEventListener('input', () => {
+            const currentTheme = colorPicker.value;
+            shapes.forEach(shape => {
+                shape.color = getThemeShade(currentTheme);
+            });
+        });
+
+        // Loop de animação principal
+        function loop() {
+            // Fundo com leve rastro (motion blur estilo MDN)
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
+            ctx.fillRect(0, 0, width, height);
+
+            for (let i = 0; i < shapes.length; i++) {
+                if (shapes[i].exists) {
+                    shapes[i].draw();
+                    shapes[i].update();
+                }
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        // Inicializar e rodar
+        initParticles();
+        loop();
+    </script>
+</body>
+</html>
